@@ -46,7 +46,7 @@ public class AutopilotCommand {
         MinecraftHandler.setDestination(vec);
 
         source.sendSuccess(
-                () -> Component.translatable("commands.ghastautopilot.setdestination.success", (int) vec.x, (int) vec.y, (int) vec.z),
+                () -> Component.translatable("commands.ghastautopilot.setdestination.success", (int) vec.x, (int) vec.z),
                 false
         );
 
@@ -66,6 +66,11 @@ public class AutopilotCommand {
         }
 
         MinecraftHandler.clearDestination();
+
+        if (MinecraftHandler.getDestination() == null) {
+            source.sendFailure(Component.translatable("commands.ghastautopilot.removedestination.failure"));
+            return 0;
+        }
 
         source.sendSuccess(
                 () -> Component.translatable("commands.ghastautopilot.removedestination.success"),

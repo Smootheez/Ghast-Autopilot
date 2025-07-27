@@ -15,11 +15,6 @@ public abstract class MinecraftMixin {
     @Unique
     private final MinecraftHandler handler = new MinecraftHandler(this.minecraft);
 
-    @Inject(method = "handleKeybinds", at = @At("HEAD"))
-    private void handleKeybinds(CallbackInfo ci) {
-        this.handler.handleKeybinds();
-    }
-
     @Inject(method = "tick", at = @At("TAIL"))
     private void clientTick(CallbackInfo ci) {
         this.handler.clientTick();

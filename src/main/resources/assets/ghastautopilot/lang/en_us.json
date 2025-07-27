@@ -7,10 +7,19 @@
   "config.option.ghastautopilot.enableAutopilot": "Autopilot",
   "config.option.ghastautopilot.enableAutopilot.description": "Allows to use Ghast Autopilot",
 
+  "config.option.ghastautopilot.stopThreshold": "Stop Threshold",
+  "config.option.ghastautopilot.stopThreshold.description": "The distance to stop the Ghast Autopilot. Minimum value: 0.0, Maximum value: 10.0.",
+
   "key.categories.ghastautopilot": "Ghast Autopilot",
   "key.ghastautopilot.startAutopilot": "Enabled Ghast Autopilot",
 
-  "commands.ghastautopilot.setdestination.success": "Set destination to (%s, %s, %s)",
+  "commands.ghastautopilot.setdestination.success": "Set destination to (%s, %s)",
   "commands.ghastautopilot.removedestination.success": "Destination Removed Successfully",
-  "commands.ghastautopilot.error.notRidingHappyGhast": "You must riding Happy Ghast to use this command"
+  "commands.ghastautopilot.removedestination.failure": "There is no destination to remove",
+  "commands.ghastautopilot.error.notRidingHappyGhast": "You must riding Happy Ghast to use this command",
+  "commands.ghastautopilot.error.notRiding": "You are not riding Happy Ghast",
+  "commands.ghastautopilot.error.tooLow": "You are too low to use Happy Ghast Autopilot",
+  "commands.ghastautopilot.arrived": "You have arrived at your destination",
+  "commands.ghastautopilot.enabled": "Ghast Autopilot enabled",
+  "commands.ghastautopilot.disabled": "Ghast Autopilot disabled"
 }

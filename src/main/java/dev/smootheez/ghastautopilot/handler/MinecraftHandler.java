@@ -3,6 +3,7 @@ package dev.smootheez.ghastautopilot.handler;
 import dev.smootheez.ghastautopilot.config.*;
 import dev.smootheez.ghastautopilot.registry.*;
 import net.fabricmc.api.*;
+import net.minecraft.*;
 import net.minecraft.client.*;
 import net.minecraft.client.player.*;
 import net.minecraft.network.chat.*;
@@ -20,16 +21,16 @@ public class MinecraftHandler {
         destination = newDestination;
     }
 
+    public static Vec3 getDestination() {
+        return destination;
+    }
+
     public static void clearDestination() {
         destination = null;
     }
 
     public MinecraftHandler(Minecraft minecraft) {
         this.minecraft = minecraft;
-    }
-
-    public void handleKeybinds() {
-        // Handle keybinds
     }
 
     public void clientTick() {
@@ -49,22 +50,22 @@ public class MinecraftHandler {
         while (KeyMappingRegistrar.START_AUTOPILOT.consumeClick() && autopilotEnabledInConfig) {
             if (isRidingHappyGhast) {
                 if (player.getY() <= GhastAutopilotConfig.MINIMUM_HEIGHT.getValue()) {
-                    log("You are too low to use the autopilot!");
+                    player.displayClientMessage(Component.translatable("commands.ghastautopilot.error.tooLow").withStyle(ChatFormatting.RED), true);
                     continue;
                 }
 
+                toggleAutopilot();
             } else {
-                log("You are not riding a happy ghast!");
+                player.displayClientMessage(Component.translatable("commands.ghastautopilot.error.notRiding").withStyle(ChatFormatting.RED), true);
             }
-
-            toggleAutopilot();
         }
     }
 
     private void toggleAutopilot() {
         enableAutopilot = !enableAutopilot;
         minecraft.options.keyUp.setDown(enableAutopilot);
-        log("Autopilot " + (enableAutopilot ? "enabled" : "disabled"));
+        if (minecraft.player != null)
+            minecraft.player.displayClientMessage(Component.translatable("commands.ghastautopilot." + (enableAutopilot ? "enabled" : "disabled")).withStyle(enableAutopilot ? ChatFormatting.GREEN : ChatFormatting.YELLOW), true);
     }
 
     private void handleAutopilotInterrupt(boolean isRidingHappyGhast) {
@@ -72,7 +73,8 @@ public class MinecraftHandler {
             enableAutopilot = false;
             clearDestination();
             minecraft.options.keyUp.setDown(false);
-            log("You are not riding a happy ghast!");
+            if (minecraft.player == null) return;
+            minecraft.player.displayClientMessage(Component.translatable("commands.ghastautopilot.error.notRiding").withStyle(ChatFormatting.YELLOW), true);
         }
     }
 
@@ -95,35 +97,32 @@ public class MinecraftHandler {
     private void lookAt(Vec3 destination) {
         LocalPlayer player = minecraft.player;
         if (player == null) return;
+
         Vec3 eyePos = player.getEyePosition(1.0F);
 
         double dx = destination.x - eyePos.x;
-        double dy = destination.y - eyePos.y;
         double dz = destination.z - eyePos.z;
 
-        double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+        double distanceSq = dx * dx + dz * dz;
+        double stopThresholdSq = GhastAutopilotConfig.STOP_THRESHOLD.getValue();
+
+        if (distanceSq < stopThresholdSq) {
+            enableAutopilot = false;
+            minecraft.options.keyUp.setDown(false);
+            clearDestination();
+            player.displayClientMessage(Component.translatable("commands.ghastautopilot.arrived").withStyle(ChatFormatting.GREEN), true);
+            return;
+        }
+
         float yaw = (float) (Mth.atan2(dz, dx) * (180F / Math.PI)) - 90F;
-        float pitch = (float) -(Mth.atan2(dy, horizontalDistance) * (180F / Math.PI));
 
         player.setYRot(yaw);
-        player.setXRot(pitch);
-
         player.yRotO = yaw;
-        player.xRotO = pitch;
-
-        log("Looking at " + destination);
     }
-
 
     private float lerp(float from, float to, float maxSpeed) {
         float diff = to - from;
-        float speed = Math.min(Math.abs(diff) * 0.2f, maxSpeed); // scale speed based on distance
+        float speed = Math.min(Math.abs(diff) * 0.2f, maxSpeed);
         return from + diff * speed;
-    }
-
-
-    private void log(String message) {
-        if (minecraft.player != null)
-            minecraft.player.displayClientMessage(Component.literal("[Autopilot] " + message), false);
     }
 }
