@@ -14,14 +14,14 @@ import net.minecraft.world.phys.*;
 public class MinecraftHandler {
     private final Minecraft minecraft;
     private boolean enableAutopilot = false;
-    private Vec3 destination = null;
+    private static Vec3 destination = null;
 
-    public void setDestination(Vec3 destination) {
-        this.destination = destination;
+    public static void setDestination(Vec3 newDestination) {
+        destination = newDestination;
     }
 
-    public void clearDestination() {
-        this.destination = null;
+    public static void clearDestination() {
+        destination = null;
     }
 
     public MinecraftHandler(Minecraft minecraft) {
@@ -38,46 +38,59 @@ public class MinecraftHandler {
 
         boolean isRidingHappyGhast = player.getVehicle() instanceof HappyGhast;
 
-        boolean autopilotValue = GhastAutopilotConfig.ENABLE_AUTOPILOT.getValue();
-        while (KeyMappingRegistrar.START_AUTOPILOT.consumeClick() && autopilotValue) {
+        handleAutopilotToggle(player, isRidingHappyGhast);
+        handleAutopilotInterrupt(isRidingHappyGhast);
+        handleAutopilotSteering(player);
+    }
+
+    private void handleAutopilotToggle(LocalPlayer player, boolean isRidingHappyGhast) {
+        boolean autopilotEnabledInConfig = GhastAutopilotConfig.ENABLE_AUTOPILOT.getValue();
+
+        while (KeyMappingRegistrar.START_AUTOPILOT.consumeClick() && autopilotEnabledInConfig) {
             if (isRidingHappyGhast) {
-                if (minecraft.player.getY() <= GhastAutopilotConfig.MINIMUM_HEIGHT.getValue()) {
+                if (player.getY() <= GhastAutopilotConfig.MINIMUM_HEIGHT.getValue()) {
                     log("You are too low to use the autopilot!");
                     continue;
                 }
 
-                enableAutopilot = !enableAutopilot;
-
-                // Fix: set W key state when toggling autopilot
-                minecraft.options.keyUp.setDown(enableAutopilot);
-
-                log("Autopilot " + (enableAutopilot ? "enabled" : "disabled"));
             } else {
                 log("You are not riding a happy ghast!");
             }
-        }
 
-        // If autopilot is on, but we stopped riding the ghast, disable it
+            toggleAutopilot();
+        }
+    }
+
+    private void toggleAutopilot() {
+        enableAutopilot = !enableAutopilot;
+        minecraft.options.keyUp.setDown(enableAutopilot);
+        log("Autopilot " + (enableAutopilot ? "enabled" : "disabled"));
+    }
+
+    private void handleAutopilotInterrupt(boolean isRidingHappyGhast) {
         if (enableAutopilot && !isRidingHappyGhast) {
             enableAutopilot = false;
+            clearDestination();
             minecraft.options.keyUp.setDown(false);
             log("You are not riding a happy ghast!");
         }
-
-        // Only set keyUp if autopilot is still valid
-        if (enableAutopilot) {
-            minecraft.options.keyUp.setDown(true);
-
-            destination = new Vec3(100, player.getY(), 100);
-            lookAt(destination);
-
-            float currentPitch = player.getXRot();
-            float targetPitch = 0f;
-            float lerpSpeed = 0.1f;
-
-            player.setXRot(lerp(currentPitch, targetPitch, lerpSpeed));
-        }
     }
+
+    private void handleAutopilotSteering(LocalPlayer player) {
+        if (!enableAutopilot) return;
+
+        minecraft.options.keyUp.setDown(true);
+
+        if (destination != null) {
+            lookAt(destination);
+        }
+
+        float currentPitch = player.getXRot();
+        float targetPitch = 0f;
+        float lerpSpeed = 0.1f;
+        player.setXRot(lerp(currentPitch, targetPitch, lerpSpeed));
+    }
+
 
     private void lookAt(Vec3 destination) {
         LocalPlayer player = minecraft.player;

@@ -3,15 +3,16 @@ package dev.smootheez.ghastautopilot.command;
 import com.mojang.brigadier.*;
 import dev.smootheez.ghastautopilot.handler.*;
 import net.minecraft.client.*;
+import net.minecraft.client.player.*;
 import net.minecraft.commands.*;
 import net.minecraft.commands.arguments.coordinates.*;
 import net.minecraft.network.chat.*;
+import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.phys.*;
 
 public class AutopilotCommand {
     private static final String SET_DESTINATION = "setdestination";
     private static final String REMOVE_DESTINATION = "removedestination";
-    private static final MinecraftHandler handler = new MinecraftHandler(Minecraft.getInstance());
 
     private AutopilotCommand() {}
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -31,26 +32,46 @@ public class AutopilotCommand {
     }
 
     private static int runSetDestinationCommand(CommandSourceStack source, Coordinates coordinates) {
-        Vec3 vec = coordinates.getPosition(source);
-        handler.setDestination(vec);
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+
+        if (player == null || !(player.getVehicle() instanceof HappyGhast)) {
+            if (player != null) {
+                source.sendFailure(Component.translatable("commands.ghastautopilot.error.notRidingHappyGhast"));
+            }
+            return 0;
+        }
+
+        Vec3 vec = coordinates.getPosition(source); // Make sure this works in client context
+        MinecraftHandler.setDestination(vec);
 
         source.sendSuccess(
                 () -> Component.translatable("commands.ghastautopilot.setdestination.success", (int) vec.x, (int) vec.y, (int) vec.z),
-                true
+                false
         );
 
         return 1;
     }
 
+
     private static int runRemoveDestinationCommand(CommandSourceStack source) {
-        handler.clearDestination();
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+
+        if (player == null || !(player.getVehicle() instanceof HappyGhast)) {
+            if (player != null) {
+                source.sendFailure(Component.translatable("commands.ghastautopilot.error.notRidingHappyGhast"));
+            }
+            return 0;
+        }
+
+        MinecraftHandler.clearDestination();
 
         source.sendSuccess(
                 () -> Component.translatable("commands.ghastautopilot.removedestination.success"),
-                true
+                false
         );
 
         return 1;
     }
-
 }

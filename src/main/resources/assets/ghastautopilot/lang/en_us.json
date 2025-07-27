@@ -11,5 +11,6 @@
   "key.ghastautopilot.startAutopilot": "Enabled Ghast Autopilot",
 
   "commands.ghastautopilot.setdestination.success": "Set destination to (%s, %s, %s)",
-  "commands.ghastautopilot.removedestination.success": "Destination Removed Successfully"
+  "commands.ghastautopilot.removedestination.success": "Destination Removed Successfully",
+  "commands.ghastautopilot.error.notRidingHappyGhast": "You must riding Happy Ghast to use this command"
 }
