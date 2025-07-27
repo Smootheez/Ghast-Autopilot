@@ -1,0 +1,15 @@
+{
+  "config.screen.ghastautopilot.title": "Ghast Autopilot",
+
+  "config.option.ghastautopilot.minimumHeight": "Minimum Height",
+  "config.option.ghastautopilot.minimumHeight.description": "The minimum height to be able to use the Ghast Autopilot. Minimum value: 32, Maximum value: 320.",
+
+  "config.option.ghastautopilot.enableAutopilot": "Autopilot",
+  "config.option.ghastautopilot.enableAutopilot.description": "Allows to use Ghast Autopilot",
+
+  "key.categories.ghastautopilot": "Ghast Autopilot",
+  "key.ghastautopilot.startAutopilot": "Enabled Ghast Autopilot",
+
+  "commands.ghastautopilot.setdestination.success": "Set destination to (%s, %s, %s)",
+  "commands.ghastautopilot.removedestination.success": "Destination Removed Successfully"
+}

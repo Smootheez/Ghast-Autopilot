@@ -1,0 +1,87 @@
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+loom {
+    accessWidenerPath = file("src/main/resources/ghastautopilot.accesswidener")
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "com.github.Smootheez:scl:${project.scl_version}"
+
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modLocalRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modLocalRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources{
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+    filesMatching("fabric.mod.json"){
+        expand project.properties
+    }
+}
+
+def targetJavaVersion = project.java_version
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= (10 as String) || JavaVersion.current().isJava10Compatible()) {
+        it.options.release.set(targetJavaVersion as Integer)
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    withSourcesJar()
+}
+
+def tagName = project.mod_version
+def tagMessage = "Release version ${tagName}"
+
+tasks.register('createTag', Exec) {
+    group = "Publishing"
+    description = "Create tag for current version"
+    println "Creating tag with name: ${tagName}"
+    println "Creating tag with description: ${tagMessage}"
+    commandLine "git", "tag", "-a", tagName, "-m", tagMessage
+}
+
+tasks.register('pushTag', Exec) {
+    group = "Publishing"
+    description = "Push tag to origin"
+    println "Pushing tag to origin..."
+    commandLine "git", "push", "origin", tagName
+    dependsOn createTag
+}
+
+tasks.register("uploadMod") {
+    group = "Publishing"
+    description = "Create tag for current version, push it to origin, and upload it to Modrinth and Curseforge."
+    dependsOn pushTag
+}
