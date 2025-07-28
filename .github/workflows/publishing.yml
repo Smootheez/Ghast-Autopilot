@@ -1,0 +1,104 @@
+name: Publishing Mod
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read Java version
+        id: properties
+        shell: bash
+        run: |
+          JAVA_VERSION=$(grep "java_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          echo "java_version=$JAVA_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ steps.properties.outputs.java_version }}
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifacts
+          path: build/libs/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read required properties
+        id: properties
+        shell: bash
+        run: |
+          JAVA_VERSION=$(grep "java_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          MOD_VERSION=$(grep "mod_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          SCL_VERSION=$(grep "scl_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          MOD_NAME=$(grep "mod_name" gradle.properties | cut -d'=' -f2- | sed 's/^ //')
+          MODRINTH_ID=$(grep "modrinth_id" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          CURSEFORGE_ID=$(grep "curseforge_id" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          GAME_VERSIONS=$(grep "game_versions" gradle.properties | cut -d'=' -f2- | tr -d ' ' | tr ',' '\n')
+          VERSION_TYPE=$(grep "version_type" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          
+          echo "version_type=$VERSION_TYPE" >> $GITHUB_OUTPUT
+          echo "java_version=$JAVA_VERSION" >> $GITHUB_OUTPUT
+          echo "mod_version=$MOD_VERSION" >> $GITHUB_OUTPUT
+          echo "scl_version=$SCL_VERSION" >> $GITHUB_OUTPUT
+          echo "mod_name=$MOD_NAME" >> $GITHUB_OUTPUT
+          echo "modrinth_id=$MODRINTH_ID" >> $GITHUB_OUTPUT
+          echo "curseforge_id=$CURSEFORGE_ID" >> $GITHUB_OUTPUT
+          echo "game_versions<<EOF" >> $GITHUB_OUTPUT
+          echo "$GAME_VERSIONS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: build/libs/
+
+      - name: Find main JAR file
+        id: find_jar
+        run: |
+          JAR_FILE=$(ls build/libs/ | grep -v "sources\|dev" | grep "\.jar$" | head -n 1)
+          echo "jar_file=build/libs/$JAR_FILE" >> $GITHUB_OUTPUT
+          echo "Found JAR file: $JAR_FILE"
+
+      - name: Upload Mod
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ steps.properties.outputs.modrinth_id }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+
+          curseforge-id: ${{ steps.properties.outputs.curseforge_id }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: ${{ steps.find_jar.outputs.jar_file }}
+          name: "${{ steps.properties.outputs.mod_name }} ${{ steps.properties.outputs.mod_version }}"
+          version-type: ${{ steps.properties.outputs.version_type }}
+          version: ${{ steps.properties.outputs.mod_version }}
+          changelog: ${{ github.event.release.body }}
+          dependencies: |
+            scl@${{ steps.properties.outputs.scl_version }}(required){modrinth:zLVNfWvA}{curseforge:1107934}#(ignore:github)
+
+          loaders: fabric
+          game-versions: ${{ steps.properties.outputs.game_versions }}
+          java: ${{ steps.properties.outputs.java_version }}

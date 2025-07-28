@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read Gradle properties
+        id: properties
+        shell: bash
+        run: |
+          JAVA_VERSION=$(grep "java_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          MOD_NAME=$(grep "mod_name" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          echo "java_version=$JAVA_VERSION" >> $GITHUB_OUTPUT
+          echo "mod_name=$MOD_NAME" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ steps.properties.outputs.java_version }}
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.properties.outputs.mod_name }} ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          body_path: CHANGELOG.md
+          files: |
+            build/libs/*.jar
+            LICENSE
+            README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
