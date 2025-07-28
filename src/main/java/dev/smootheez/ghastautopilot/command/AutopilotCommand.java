@@ -65,13 +65,12 @@ public class AutopilotCommand {
             return 0;
         }
 
-        MinecraftHandler.clearDestination();
-
         if (MinecraftHandler.getDestination() == null) {
             source.sendFailure(Component.translatable("commands.ghastautopilot.removedestination.failure"));
             return 0;
         }
 
+        MinecraftHandler.clearDestination();
         source.sendSuccess(
                 () -> Component.translatable("commands.ghastautopilot.removedestination.success"),
                 false
