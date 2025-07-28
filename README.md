@@ -1,14 +1,8 @@
 # 🚀 Ghast Autopilot
 
-Tired of holding down the W key to fly your Happy Ghast around? You're in the right place!
+Tired of holding down the forward key to fly your Happy Ghast around? You're in the right place!
 
 Ghast Autopilot lets you enable autopilot mode while riding your Happy Ghast, so you can sit back and enjoy the ride without manual control.
-
-## ⚙️ Configuration
-
-You can configure all features easily:
-- In-game via the config menu *(requires ModMenu)*
-- Manually by editing the config file
 
 ---
 
@@ -40,6 +34,14 @@ To clear the destination, use:
 ```
 
 ![Set Destination Preview](https://raw.githubusercontent.com/Smootheez/Ghast-Autopilot/refs/heads/master/assets/gif/setdestination_command_preview.gif)
+
+---
+
+## ⚙️ Configuration
+
+You can configure all features easily:
+- In-game via the config menu *(requires ModMenu)*
+- Manually by editing the config file
 
 ---
 
