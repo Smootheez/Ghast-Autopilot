@@ -17,7 +17,7 @@ jobs:
         shell: bash
         run: |
           JAVA_VERSION=$(grep "java_version" gradle.properties | cut -d'=' -f2 | tr -d ' ')
-          MOD_NAME=$(grep "mod_name" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+          MOD_NAME=$(grep "mod_name" gradle.properties | cut -d'=' -f2- | sed 's/^[ \t]*//;s/[ \t]*$//')
           echo "java_version=$JAVA_VERSION" >> $GITHUB_OUTPUT
           echo "mod_name=$MOD_NAME" >> $GITHUB_OUTPUT
 
