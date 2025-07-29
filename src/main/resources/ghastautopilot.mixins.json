@@ -4,14 +4,12 @@
   "package": "dev.smootheez.ghastautopilot.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ClientPacketListenerMixin",
     "KeyMappingMixin",
     "MinecraftMixin",
     "OptionsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "CommandsMixin"
-  ]
+  }
 }
