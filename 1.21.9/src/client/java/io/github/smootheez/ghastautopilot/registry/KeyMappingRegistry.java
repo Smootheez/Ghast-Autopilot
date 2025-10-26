@@ -15,14 +15,14 @@ public final class KeyMappingRegistry {
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "ghast_autopilot")
     );
 
-    public static final KeyMapping ENABLE_AUTOPILOT = new KeyMapping(
-            "key." + Constants.MOD_ID + ".enable_autopilot",
+    public static final KeyMapping TOGGLE_AUTOPILOT = new KeyMapping(
+            "key." + Constants.MOD_ID + ".toggle_autopilot",
             InputConstants.KEY_B,
             GHAST_AUTOPILOT_CATEGORY
     );
 
     public static void registerKeyMappings() {
         Constants.LOGGER.info("Registering Key Mappings...");
-        KeyBindingHelper.registerKeyBinding(ENABLE_AUTOPILOT);
+        KeyBindingHelper.registerKeyBinding(TOGGLE_AUTOPILOT);
     }
 }
