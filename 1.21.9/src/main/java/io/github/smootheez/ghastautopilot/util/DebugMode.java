@@ -7,7 +7,7 @@ public final class DebugMode {
     private DebugMode() {}
 
     public static void sendLoggerInfo(String msg) {
-        if (!ConfigManager.getConfig(GhastAutopilotConfig.class).getDebugMode().getValue()) return;
+        if (Boolean.FALSE.equals(ConfigManager.getConfig(GhastAutopilotConfig.class).getDebugMode().getValue())) return;
         Constants.LOGGER.info(msg);
     }
 }

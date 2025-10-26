@@ -8,7 +8,18 @@ import io.github.smootheez.smoothiezapi.config.option.*;
 public class GhastAutopilotConfig implements ConfigApi {
     private final BooleanOption debugMode = new BooleanOption("debug_mode", false);
 
+    private final BooleanOption displayToggleNotification = new BooleanOption("display_toggle_notification", true);
+    private final BooleanOption enableGhastAutopilot = new BooleanOption("enable_ghast_autopilot", true);
+
     public BooleanOption getDebugMode() {
         return debugMode;
+    }
+
+    public BooleanOption getDisplayToggleNotification() {
+        return displayToggleNotification;
+    }
+
+    public BooleanOption getEnableGhastAutopilot() {
+        return enableGhastAutopilot;
     }
 }

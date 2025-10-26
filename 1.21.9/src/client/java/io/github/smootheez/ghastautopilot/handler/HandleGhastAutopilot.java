@@ -1,7 +1,9 @@
 package io.github.smootheez.ghastautopilot.handler;
 
+import io.github.smootheez.ghastautopilot.config.*;
 import io.github.smootheez.ghastautopilot.registry.*;
 import io.github.smootheez.ghastautopilot.util.*;
+import io.github.smootheez.smoothiezapi.config.*;
 import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
 import net.minecraft.client.*;
@@ -13,9 +15,12 @@ import net.minecraft.world.entity.animal.*;
 public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
     private boolean autoPilot = false;
     private boolean isForwardKeyForced = false;
+    private static final GhastAutopilotConfig CONFIG = ConfigManager.getConfig(GhastAutopilotConfig.class);
 
     @Override
     public void onEndTick(Minecraft minecraft) {
+        if (Boolean.FALSE.equals(CONFIG.getEnableGhastAutopilot().getValue())) return;
+
         LocalPlayer player = minecraft.player;
         if (player == null) return;
 
@@ -47,15 +52,16 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
     }
 
     private static void sendFailMessage(LocalPlayer player) {
-        player.displayClientMessage(
-                Component.translatable("fail." + Constants.MOD_ID + ".toggle_autopilot"), true
-        );
+        displayClientMessage(player, "fail." + Constants.MOD_ID + ".toggle_autopilot");
     }
 
     private void sendToggleMessage(LocalPlayer player) {
         String key = autoPilot ? "enabled" : "disabled";
-        player.displayClientMessage(
-                Component.translatable(key + "." + Constants.MOD_ID + ".toggle_autopilot"), true
-        );
+        displayClientMessage(player, key + "." + Constants.MOD_ID + ".toggle_autopilot");
+    }
+
+    private static void displayClientMessage(LocalPlayer player, String message) {
+        if (Boolean.FALSE.equals(CONFIG.getDisplayToggleNotification().getValue())) return;
+        player.displayClientMessage(Component.translatable(message), true);
     }
 }
