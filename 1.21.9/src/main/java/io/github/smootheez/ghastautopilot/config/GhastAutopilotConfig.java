@@ -10,6 +10,9 @@ public class GhastAutopilotConfig implements ConfigApi {
 
     private final BooleanOption displayToggleNotification = new BooleanOption("display_toggle_notification", true);
     private final BooleanOption enableGhastAutopilot = new BooleanOption("enable_ghast_autopilot", true);
+    private final BooleanOption enableLookAt = new BooleanOption("enable_look_at", true);
+
+    private final DoubleOption smoothFactor = new DoubleOption("smooth_factor", 0.12, 0.01, 0.5);
 
     public BooleanOption getDebugMode() {
         return debugMode;
@@ -21,5 +24,13 @@ public class GhastAutopilotConfig implements ConfigApi {
 
     public BooleanOption getEnableGhastAutopilot() {
         return enableGhastAutopilot;
+    }
+
+    public BooleanOption getEnableLookAt() {
+        return enableLookAt;
+    }
+
+    public DoubleOption getSmoothFactor() {
+        return smoothFactor;
     }
 }

@@ -8,6 +8,7 @@ public final class GhastAutopilotUtil {
     private static Vec3 vec3;
 
     public static void clearVec3() {
+        DebugMode.sendLoggerInfo("Clearing Vec3");
         GhastAutopilotUtil.vec3 = null;
     }
 
@@ -16,6 +17,7 @@ public final class GhastAutopilotUtil {
     }
 
     public static void setVec3(Vec3 vec3) {
+        DebugMode.sendLoggerInfo("Setting Vec3: " + vec3.x + ", " + vec3.z);
         GhastAutopilotUtil.vec3 = vec3;
     }
 }

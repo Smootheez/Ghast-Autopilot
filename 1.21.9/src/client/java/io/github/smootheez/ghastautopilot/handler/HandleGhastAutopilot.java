@@ -10,6 +10,7 @@ import net.minecraft.client.*;
 import net.minecraft.client.player.*;
 import net.minecraft.network.chat.*;
 import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.phys.*;
 
 @Environment(EnvType.CLIENT)
 public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
@@ -35,7 +36,10 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
         }
 
         // --- Stop autopilot if dismounted ---
-        if (!isRidingHappyGhast) autoPilot = false;
+        if (!isRidingHappyGhast) {
+            GhastAutopilotUtil.clearVec3();
+            autoPilot = false;
+        }
 
         // --- Determine whether we *should* press forward key ---
         boolean shouldForceKey = isRidingHappyGhast && autoPilot;
@@ -48,8 +52,56 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
             DebugMode.sendLoggerInfo((shouldForceKey ? "Forcing" : "Releasing") + " forward key");
         }
 
+        handleLookAt(player); //TODO: Fix the set down key suddenly false after set destination command while the autopilot is true
+
         DebugMode.sendLoggerInfo("Autopilot: " + (autoPilot ? "Enabled" : "Disabled"));
     }
+
+    private void handleLookAt(LocalPlayer player) {
+        Vec3 destination = GhastAutopilotUtil.getVec3();
+        if (Boolean.FALSE.equals(CONFIG.getEnableLookAt().getValue())
+                || destination == null
+                || !autoPilot) return;
+
+        Vec3 eyePos = player.getEyePosition(1.0F);
+
+        double dx = destination.x - eyePos.x;
+        double dz = destination.z - eyePos.z;
+
+        // --- Compute Target Rotations ---
+        float targetYaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0F);
+        float targetPitch = 0.0F; // we want level flight (no up/down look)
+
+        // --- Current Rotations ---
+        float currentYaw = player.getYRot();
+        float currentPitch = player.getXRot();
+
+        // --- Smoothly interpolate both angles ---
+        final float SMOOTH_FACTOR = CONFIG.getSmoothFactor().getValue().floatValue(); // smaller = smoother/slower
+        float newYaw = lerpAngle(currentYaw, targetYaw, SMOOTH_FACTOR);
+        float newPitch = lerp(currentPitch, targetPitch, SMOOTH_FACTOR);
+
+        // --- Apply Rotations ---
+        player.setYRot(newYaw);
+        player.setXRot(newPitch);
+    }
+
+    private static float lerp(float from, float to, float amount) {
+        return from + (to - from) * amount;
+    }
+
+    private static float lerpAngle(float from, float to, float amount) {
+        float delta = wrapDegrees(to - from);
+        return from + delta * amount;
+    }
+
+    private static float wrapDegrees(float angle) {
+        angle %= 360.0F;
+        if (angle >= 180.0F) angle -= 360.0F;
+        if (angle < -180.0F) angle += 360.0F;
+        return angle;
+    }
+
 
     private static void sendFailMessage(LocalPlayer player) {
         displayClientMessage(player, "fail." + Constants.MOD_ID + ".toggle_autopilot");
