@@ -1,7 +1,7 @@
 package io.github.smootheez.ghastautopilot;
 
 import io.github.smootheez.ghastautopilot.command.*;
-import io.github.smootheez.ghastautopilot.handle.*;
+import io.github.smootheez.ghastautopilot.handler.*;
 import io.github.smootheez.ghastautopilot.registry.*;
 import io.github.smootheez.ghastautopilot.util.*;
 import net.fabricmc.api.*;
