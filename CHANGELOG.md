@@ -1,3 +1,0 @@
-- Add keybind to toggle Ghast Autopilot.
-- Add command to set a destination.
-- Add command to remove a destination.
