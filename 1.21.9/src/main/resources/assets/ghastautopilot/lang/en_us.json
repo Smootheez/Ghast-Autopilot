@@ -1,0 +1,4 @@
+{
+  "commands.ghastautopilot.set_destination.success": "[Ghast Autopilot] Set destination to (%s, %s)",
+  "commands.ghastautopilot.remove_destination.success": "[Ghast Autopilot] Destination removed"
+}
