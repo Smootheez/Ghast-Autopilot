@@ -130,7 +130,8 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
 
     private void sendToggleMessage(LocalPlayer player) {
         String key = GhastAutopilotUtil.isAutoPilot() ? "enabled" : "disabled";
-        displayClientMessage(player, key + "." + MODID_TOGGLE_AUTOPILOT, ChatFormatting.GREEN);
+        ChatFormatting formatting = GhastAutopilotUtil.isAutoPilot() ? ChatFormatting.GREEN : ChatFormatting.YELLOW;
+        displayClientMessage(player, key + "." + MODID_TOGGLE_AUTOPILOT, formatting);
     }
 
     private static void displayClientMessage(LocalPlayer player, String message, ChatFormatting chatFormatting) {

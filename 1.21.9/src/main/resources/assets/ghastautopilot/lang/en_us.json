@@ -1,4 +1,15 @@
 {
   "commands.ghastautopilot.set_destination.success": "[Ghast Autopilot] Set destination to (%s, %s)",
-  "commands.ghastautopilot.remove_destination.success": "[Ghast Autopilot] Destination removed"
+  "commands.ghastautopilot.set_destination.fail": "[Ghast Autopilot] Failed to set destination. You must be riding a Happy Ghast",
+
+  "commands.ghastautopilot.remove_destination.success": "[Ghast Autopilot] Destination removed",
+  "commands.ghastautopilot.remove_destination.fail": "[Ghast Autopilot] Destination not set",
+
+  "commands.ghastautopilot.get_destination.success": "[Ghast Autopilot] Current destination is (%s, %s)",
+  "commands.ghastautopilot.get_destination.fail": "[Ghast Autopilot] Destination not set",
+
+  "arrived.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Arrived at destination",
+  "enabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot enabled",
+  "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot disabled",
+  "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] You must be riding a Happy Ghast"
 }

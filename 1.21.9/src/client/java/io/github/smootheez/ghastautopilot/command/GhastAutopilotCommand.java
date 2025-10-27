@@ -20,10 +20,10 @@ public class GhastAutopilotCommand implements ClientCommandRegistrationCallback 
     private static final String X_COORDINATE = "x";
     private static final String Z_COORDINATE = "z";
 
-    private static final String COMMANDS = "commands.";
-    private static final String REMOVE_TRANSLATABLE_MESSAGE = COMMANDS + Constants.MOD_ID + ".remove_destination";
-    private static final String SET_TRANSLATABLE_MESSAGE = COMMANDS + Constants.MOD_ID + ".set_destination";
-    private static final String GET_TRANSLATABLE_MESSAGE = COMMANDS + Constants.MOD_ID + ".get_destination";
+    private static final String COMMANDS_MODID = "commands." + Constants.MOD_ID;
+    private static final String REMOVE_TRANSLATABLE_MESSAGE = COMMANDS_MODID  + ".remove_destination";
+    private static final String SET_TRANSLATABLE_MESSAGE = COMMANDS_MODID + ".set_destination";
+    private static final String GET_TRANSLATABLE_MESSAGE = COMMANDS_MODID + ".get_destination";
     private static final String SUCCESS = ".success";
     private static final String FAIL = ".fail";
 
@@ -70,8 +70,6 @@ public class GhastAutopilotCommand implements ClientCommandRegistrationCallback 
     private static int runRemoveDestination(CommandContext<FabricClientCommandSource> context) {
         LocalPlayer player = context.getSource().getPlayer();
 
-        if (isRidingHappyGhast(player, REMOVE_TRANSLATABLE_MESSAGE + FAIL  + ".not_riding")) return 0;
-
         if (GhastAutopilotUtil.getVec3() == null) {
             player.displayClientMessage(
                     Component.translatable(REMOVE_TRANSLATABLE_MESSAGE + FAIL).withStyle(ChatFormatting.RED), false
@@ -89,7 +87,12 @@ public class GhastAutopilotCommand implements ClientCommandRegistrationCallback 
     private static int runSetDestination(CommandContext<FabricClientCommandSource> context) {
         LocalPlayer player = context.getSource().getPlayer();
 
-        if (isRidingHappyGhast(player, SET_TRANSLATABLE_MESSAGE + FAIL)) return 0;
+        if (!(player.getVehicle() instanceof HappyGhast)) {
+            player.displayClientMessage(
+                    Component.translatable(SET_TRANSLATABLE_MESSAGE + FAIL).withStyle(ChatFormatting.RED), false
+            );
+            return 0;
+        }
 
         int x = IntegerArgumentType.getInteger(context, X_COORDINATE);
         int z = IntegerArgumentType.getInteger(context, Z_COORDINATE);
@@ -101,15 +104,5 @@ public class GhastAutopilotCommand implements ClientCommandRegistrationCallback 
                 Component.translatable(SET_TRANSLATABLE_MESSAGE + SUCCESS, vec3.x, vec3.z)
                         .withStyle(ChatFormatting.GREEN), false);
         return 1;
-    }
-
-    private static boolean isRidingHappyGhast(LocalPlayer player, String message) {
-        if (!(player.getVehicle() instanceof HappyGhast)) {
-            player.displayClientMessage(
-                    Component.translatable(message).withStyle(ChatFormatting.RED), false
-            );
-            return true;
-        }
-        return false;
     }
 }
