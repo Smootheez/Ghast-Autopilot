@@ -1,0 +1,37 @@
+{
+  "commands.ghastautopilot.set_destination.success": "[Ghast Autopilot] 目的地を(%s, %s)に設定しました",
+  "commands.ghastautopilot.set_destination.fail": "[Ghast Autopilot] 目的地の設定に失敗しました。ハッピーなガストに乗っている必要があります",
+
+  "commands.ghastautopilot.remove_destination.success": "[Ghast Autopilot] 目的地を削除しました",
+  "commands.ghastautopilot.remove_destination.fail": "[Ghast Autopilot] 目的地が設定されていません",
+
+  "commands.ghastautopilot.get_destination.success": "[Ghast Autopilot] 現在の目的地は(%s, %s)です",
+  "commands.ghastautopilot.get_destination.fail": "[Ghast Autopilot] 目的地が設定されていません",
+
+  "arrived.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] 目的地に到着しました！",
+  "enabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] オートパイロットが有効になりました",
+  "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] オートパイロットが無効になりました",
+  "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] ハッピーなガストに乗っている必要があります",
+
+  "config.widget.ghastautopilot.debug_mode": "デバッグモード",
+  "config.widget.ghastautopilot.ghast_autopilot": "ガストオートパイロット",
+  "config.widget.ghastautopilot.display_toggle_notification": "切り替え通知を表示",
+  "config.widget.ghastautopilot.look_at": "目的地を見る",
+  "config.widget.ghastautopilot.look_at.description": "ガストが自動的に目的地を見るようにします",
+  "config.widget.ghastautopilot.autopilot_icon": "オートパイロットアイコン",
+  "config.widget.ghastautopilot.smooth_factor": "スムーズ係数",
+  "config.widget.ghastautopilot.smooth_factor.description": "値が小さいほど、旋回はスムーズになりますが、遅くなります。",
+  "config.widget.ghastautopilot.icon_position": "アイコンの位置",
+  "config.widget.ghastautopilot.stop_threshold": "停止しきい値",
+
+  "config.widget.ghastautopilot.icon_position.top_left": "左上",
+  "config.widget.ghastautopilot.icon_position.top_middle": "上部中央",
+  "config.widget.ghastautopilot.icon_position.top_right": "右上",
+  "config.widget.ghastautopilot.icon_position.right_middle": "右中央",
+  "config.widget.ghastautopilot.icon_position.bottom_right": "右下",
+  "config.widget.ghastautopilot.icon_position.bottom_left": "左下",
+  "config.widget.ghastautopilot.icon_position.left_middle": "左中央",
+
+  "key.ghastautopilot.toggle_autopilot": "オートパイロットの切り替え",
+  "key.category.ghast_autopilot": "ガストオートパイロット"
+}

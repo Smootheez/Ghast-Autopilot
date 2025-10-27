@@ -1,0 +1,37 @@
+{
+  "commands.ghastautopilot.set_destination.success": "[Ghast Autopilot] Tujuan diatur ke (%s, %s)",
+  "commands.ghastautopilot.set_destination.fail": "[Ghast Autopilot] Gagal mengatur tujuan. Anda harus menunggangi Ghast Bahagia",
+
+  "commands.ghastautopilot.remove_destination.success": "[Ghast Autopilot] Tujuan dihapus",
+  "commands.ghastautopilot.remove_destination.fail": "[Ghast Autopilot] Tujuan tidak diatur",
+
+  "commands.ghastautopilot.get_destination.success": "[Ghast Autopilot] Tujuan saat ini adalah (%s, %s)",
+  "commands.ghastautopilot.get_destination.fail": "[Ghast Autopilot] Tujuan tidak diatur",
+
+  "arrived.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Tiba di tujuan!",
+  "enabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot diaktifkan",
+  "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot dinonaktifkan",
+  "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Anda harus menunggangi Ghast Bahagia",
+
+  "config.widget.ghastautopilot.debug_mode": "Mode Debug",
+  "config.widget.ghastautopilot.ghast_autopilot": "Ghast Autopilot",
+  "config.widget.ghastautopilot.display_toggle_notification": "Tampilkan Notifikasi Toggle",
+  "config.widget.ghastautopilot.look_at": "Lihat Tujuan",
+  "config.widget.ghastautopilot.look_at.description": "Harus membuat Ghast secara otomatis melihat tujuan",
+  "config.widget.ghastautopilot.autopilot_icon": "Ikon Autopilot",
+  "config.widget.ghastautopilot.smooth_factor": "Faktor Halus",
+  "config.widget.ghastautopilot.smooth_factor.description": "Nilai yang lebih kecil berarti lebih halus, tetapi lebih lambat, berbelok.",
+  "config.widget.ghastautopilot.icon_position": "Posisi Ikon",
+  "config.widget.ghastautopilot.stop_threshold": "Ambang Batas Berhenti",
+
+  "config.widget.ghastautopilot.icon_position.top_left": "Kiri Atas",
+  "config.widget.ghastautopilot.icon_position.top_middle": "Tengah Atas",
+  "config.widget.ghastautopilot.icon_position.top_right": "Kanan Atas",
+  "config.widget.ghastautopilot.icon_position.right_middle": "Tengah Kanan",
+  "config.widget.ghastautopilot.icon_position.bottom_right": "Kanan Bawah",
+  "config.widget.ghastautopilot.icon_position.bottom_left": "Kiri Bawah",
+  "config.widget.ghastautopilot.icon_position.left_middle": "Tengah Kiri",
+
+  "key.ghastautopilot.toggle_autopilot": "Toggle Autopilot",
+  "key.category.ghast_autopilot": "Ghast Autopilot"
+}

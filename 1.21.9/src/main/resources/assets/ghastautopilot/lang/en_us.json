@@ -17,8 +17,10 @@
   "config.widget.ghastautopilot.ghast_autopilot": "Ghast Autopilot",
   "config.widget.ghastautopilot.display_toggle_notification": "Display Toggle Notification",
   "config.widget.ghastautopilot.look_at": "Look At Destination",
+  "config.widget.ghastautopilot.look_at.description": "Should make the Ghast automatically look at the destination",
   "config.widget.ghastautopilot.autopilot_icon": "Autopilot Icon",
   "config.widget.ghastautopilot.smooth_factor": "Smooth Factor",
+  "config.widget.ghastautopilot.smooth_factor.description": "Smaller value means smoother, but slower, turning.",
   "config.widget.ghastautopilot.icon_position": "Icon Position",
   "config.widget.ghastautopilot.stop_threshold": "Stop Threshold",
 
