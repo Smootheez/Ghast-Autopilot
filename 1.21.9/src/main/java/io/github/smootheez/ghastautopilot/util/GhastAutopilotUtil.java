@@ -8,6 +8,7 @@ public final class GhastAutopilotUtil {
     private static Vec3 vec3;
 
     public static void clearVec3() {
+        if (vec3 == null) return;
         DebugMode.sendLoggerInfo("Clearing Vec3");
         GhastAutopilotUtil.vec3 = null;
     }

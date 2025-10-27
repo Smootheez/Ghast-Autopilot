@@ -44,15 +44,27 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
         // --- Determine whether we *should* press forward key ---
         boolean shouldForceKey = isRidingHappyGhast && autoPilot;
 
-        // --- Only update key state when it actually changes ---
-        if (shouldForceKey != isForwardKeyForced) {
-            minecraft.options.keyUp.setDown(shouldForceKey);
-            isForwardKeyForced = shouldForceKey;
+        // Check the current physical state
+        boolean keyPhysicallyDown = minecraft.options.keyUp.isDown();
 
-            DebugMode.sendLoggerInfo((shouldForceKey ? "Forcing" : "Releasing") + " forward key");
+        // If autopilot is active, ensure we own the key state
+        if (shouldForceKey) {
+            // Only reapply if Minecraft lost it
+            if (!keyPhysicallyDown) {
+                minecraft.options.keyUp.setDown(true);
+                DebugMode.sendLoggerInfo("Forcing forward key (autopilot active)");
+            }
+            isForwardKeyForced = true;
+        } else {
+            // If we previously forced it, release ownership
+            if (isForwardKeyForced) {
+                minecraft.options.keyUp.setDown(false);
+                DebugMode.sendLoggerInfo("Releasing forward key (autopilot off)");
+                isForwardKeyForced = false;
+            }
         }
 
-        handleLookAt(player); //TODO: Fix the set down key suddenly false after set destination command while the autopilot is true
+        handleLookAt(player);
 
         DebugMode.sendLoggerInfo("Autopilot: " + (autoPilot ? "Enabled" : "Disabled"));
     }
@@ -78,19 +90,19 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
 
         // --- Smoothly interpolate both angles ---
         final float SMOOTH_FACTOR = CONFIG.getSmoothFactor().getValue().floatValue(); // smaller = smoother/slower
-        float newYaw = lerpAngle(currentYaw, targetYaw, SMOOTH_FACTOR);
-        float newPitch = lerp(currentPitch, targetPitch, SMOOTH_FACTOR);
+        float newYaw = lerpYaw(currentYaw, targetYaw, SMOOTH_FACTOR);
+        float newPitch = lerpPitch(currentPitch, targetPitch, SMOOTH_FACTOR);
 
         // --- Apply Rotations ---
         player.setYRot(newYaw);
         player.setXRot(newPitch);
     }
 
-    private static float lerp(float from, float to, float amount) {
+    private static float lerpPitch(float from, float to, float amount) {
         return from + (to - from) * amount;
     }
 
-    private static float lerpAngle(float from, float to, float amount) {
+    private static float lerpYaw(float from, float to, float amount) {
         float delta = wrapDegrees(to - from);
         return from + delta * amount;
     }
