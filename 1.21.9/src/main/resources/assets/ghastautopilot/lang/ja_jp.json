@@ -33,5 +33,5 @@
   "config.widget.ghastautopilot.icon_position.left_middle": "左中央",
 
   "key.ghastautopilot.toggle_autopilot": "オートパイロットの切り替え",
-  "key.category.ghast_autopilot": "ガストオートパイロット"
+  "key.category.ghastautopilot.ghast_autopilot": "ガストオートパイロット"
 }
