@@ -8,8 +8,28 @@
   "commands.ghastautopilot.get_destination.success": "[Ghast Autopilot] Current destination is (%s, %s)",
   "commands.ghastautopilot.get_destination.fail": "[Ghast Autopilot] Destination not set",
 
-  "arrived.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Arrived at destination",
+  "arrived.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Arrived at destination!",
   "enabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot enabled",
   "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot disabled",
-  "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] You must be riding a Happy Ghast"
+  "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] You must be riding a Happy Ghast",
+
+  "config.widget.ghastautopilot.debug_mode": "Debug Mode",
+  "config.widget.ghastautopilot.ghast_autopilot": "Ghast Autopilot",
+  "config.widget.ghastautopilot.display_toggle_notification": "Display Toggle Notification",
+  "config.widget.ghastautopilot.look_at": "Look At Destination",
+  "config.widget.ghastautopilot.autopilot_icon": "Autopilot Icon",
+  "config.widget.ghastautopilot.smooth_factor": "Smooth Factor",
+  "config.widget.ghastautopilot.icon_position": "Icon Position",
+  "config.widget.ghastautopilot.stop_threshold": "Stop Threshold",
+
+  "config.widget.ghastautopilot.icon_position.top_left": "Top Left",
+  "config.widget.ghastautopilot.icon_position.top_middle": "Top Middle",
+  "config.widget.ghastautopilot.icon_position.top_right": "Top Right",
+  "config.widget.ghastautopilot.icon_position.right_middle": "Right Middle",
+  "config.widget.ghastautopilot.icon_position.bottom_right": "Bottom Right",
+  "config.widget.ghastautopilot.icon_position.bottom_left": "Bottom Left",
+  "config.widget.ghastautopilot.icon_position.left_middle": "Left Middle",
+
+  "key.ghastautopilot.toggle_autopilot": "Toggle Autopilot",
+  "key.category.ghast_autopilot": "Ghast Autopilot"
 }
