@@ -7,6 +7,8 @@ import io.github.smootheez.ghastautopilot.util.*;
 import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.command.v2.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.*;
+import net.minecraft.resources.*;
 
 @Environment(EnvType.CLIENT)
 public class GhastAutopilotClient implements ClientModInitializer {
@@ -16,6 +18,10 @@ public class GhastAutopilotClient implements ClientModInitializer {
         KeyMappingRegistry.registerKeyMappings();
 
         ClientCommandRegistrationCallback.EVENT.register(new GhastAutopilotCommand());
-        ClientTickEvents.END_CLIENT_TICK.register(new HandleGhastAutopilot());
+        ClientTickEvents.END_CLIENT_TICK.register(new HandleEndTick());
+        HudElementRegistry.addFirst(
+                ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "overlay"),
+                new HandleHudOverlay()
+        );
     }
 }

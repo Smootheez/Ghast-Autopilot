@@ -6,6 +6,15 @@ public final class GhastAutopilotUtil {
     private GhastAutopilotUtil() {}
 
     private static Vec3 vec3;
+    private static boolean autoPilot = false;
+
+    public static boolean isAutoPilot() {
+        return autoPilot;
+    }
+
+    public static void setAutoPilot(boolean autoPilot) {
+        GhastAutopilotUtil.autoPilot = autoPilot;
+    }
 
     public static void clearVec3() {
         if (vec3 == null) return;

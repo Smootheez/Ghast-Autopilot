@@ -13,8 +13,7 @@ import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.phys.*;
 
 @Environment(EnvType.CLIENT)
-public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
-    private boolean autoPilot = false;
+public class HandleEndTick implements ClientTickEvents.EndTick {
     private boolean isForwardKeyForced = false;
     private static final GhastAutopilotConfig CONFIG = ConfigManager.getConfig(GhastAutopilotConfig.class);
 
@@ -30,7 +29,7 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
         // --- Handle toggling ---
         while (KeyMappingRegistry.TOGGLE_AUTOPILOT.consumeClick()) {
             if (isRidingHappyGhast) {
-                autoPilot = !autoPilot;
+                GhastAutopilotUtil.setAutoPilot(!GhastAutopilotUtil.isAutoPilot());
                 sendToggleMessage(player);
             } else sendFailMessage(player);
         }
@@ -38,11 +37,11 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
         // --- Stop autopilot if dismounted ---
         if (!isRidingHappyGhast) {
             GhastAutopilotUtil.clearVec3();
-            autoPilot = false;
+            GhastAutopilotUtil.setAutoPilot(false);
         }
 
         // --- Determine whether we *should* press forward key ---
-        boolean shouldForceKey = isRidingHappyGhast && autoPilot;
+        boolean shouldForceKey = isRidingHappyGhast && GhastAutopilotUtil.isAutoPilot();
 
         // Check the current physical state
         boolean keyPhysicallyDown = minecraft.options.keyUp.isDown();
@@ -66,14 +65,14 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
 
         handleLookAt(player);
 
-        DebugMode.sendLoggerInfo("Autopilot: " + (autoPilot ? "Enabled" : "Disabled"));
+        DebugMode.sendLoggerInfo("Autopilot: " + (GhastAutopilotUtil.isAutoPilot() ? "Enabled" : "Disabled"));
     }
 
     private void handleLookAt(LocalPlayer player) {
         Vec3 destination = GhastAutopilotUtil.getVec3();
         if (Boolean.FALSE.equals(CONFIG.getEnableLookAt().getValue())
                 || destination == null
-                || !autoPilot) return;
+                || !GhastAutopilotUtil.isAutoPilot()) return;
 
         Vec3 eyePos = player.getEyePosition(1.0F);
 
@@ -120,7 +119,7 @@ public class HandleGhastAutopilot implements ClientTickEvents.EndTick {
     }
 
     private void sendToggleMessage(LocalPlayer player) {
-        String key = autoPilot ? "enabled" : "disabled";
+        String key = GhastAutopilotUtil.isAutoPilot() ? "enabled" : "disabled";
         displayClientMessage(player, key + "." + Constants.MOD_ID + ".toggle_autopilot");
     }
 
