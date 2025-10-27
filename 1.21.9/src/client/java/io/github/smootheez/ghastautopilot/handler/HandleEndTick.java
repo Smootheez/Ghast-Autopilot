@@ -6,6 +6,7 @@ import io.github.smootheez.ghastautopilot.util.*;
 import io.github.smootheez.smoothiezapi.config.*;
 import net.fabricmc.api.*;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.*;
+import net.minecraft.*;
 import net.minecraft.client.*;
 import net.minecraft.client.player.*;
 import net.minecraft.network.chat.*;
@@ -14,12 +15,13 @@ import net.minecraft.world.phys.*;
 
 @Environment(EnvType.CLIENT)
 public class HandleEndTick implements ClientTickEvents.EndTick {
+    private static final String MODID_TOGGLE_AUTOPILOT = Constants.MOD_ID + ".toggle_autopilot";
     private boolean isForwardKeyForced = false;
     private static final GhastAutopilotConfig CONFIG = ConfigManager.getConfig(GhastAutopilotConfig.class);
 
     @Override
     public void onEndTick(Minecraft minecraft) {
-        if (Boolean.FALSE.equals(CONFIG.getEnableGhastAutopilot().getValue())) return;
+        if (Boolean.FALSE.equals(CONFIG.getGhastAutopilot().getValue())) return;
 
         LocalPlayer player = minecraft.player;
         if (player == null) return;
@@ -35,10 +37,7 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
         }
 
         // --- Stop autopilot if dismounted ---
-        if (!isRidingHappyGhast) {
-            GhastAutopilotUtil.clearVec3();
-            GhastAutopilotUtil.setAutoPilot(false);
-        }
+        if (!isRidingHappyGhast) clearVc3AndDisableAutopilot();
 
         // --- Determine whether we *should* press forward key ---
         boolean shouldForceKey = isRidingHappyGhast && GhastAutopilotUtil.isAutoPilot();
@@ -70,7 +69,7 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
 
     private void handleLookAt(LocalPlayer player) {
         Vec3 destination = GhastAutopilotUtil.getVec3();
-        if (Boolean.FALSE.equals(CONFIG.getEnableLookAt().getValue())
+        if (Boolean.FALSE.equals(CONFIG.getLookAt().getValue())
                 || destination == null
                 || !GhastAutopilotUtil.isAutoPilot()) return;
 
@@ -78,6 +77,12 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
 
         double dx = destination.x - eyePos.x;
         double dz = destination.z - eyePos.z;
+
+        double distanceSq = dx * dx + dz * dz;
+        if (distanceSq < CONFIG.getStopThreshold().getValue()) {
+            clearVc3AndDisableAutopilot();
+            displayClientMessage(player, "arrived." + MODID_TOGGLE_AUTOPILOT, ChatFormatting.GREEN);
+        }
 
         // --- Compute Target Rotations ---
         float targetYaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0F);
@@ -95,6 +100,11 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
         // --- Apply Rotations ---
         player.setYRot(newYaw);
         player.setXRot(newPitch);
+    }
+
+    private static void clearVc3AndDisableAutopilot() {
+        GhastAutopilotUtil.clearVec3();
+        GhastAutopilotUtil.setAutoPilot(false);
     }
 
     private static float lerpPitch(float from, float to, float amount) {
@@ -115,16 +125,16 @@ public class HandleEndTick implements ClientTickEvents.EndTick {
 
 
     private static void sendFailMessage(LocalPlayer player) {
-        displayClientMessage(player, "fail." + Constants.MOD_ID + ".toggle_autopilot");
+        displayClientMessage(player, "fail." + MODID_TOGGLE_AUTOPILOT, ChatFormatting.RED);
     }
 
     private void sendToggleMessage(LocalPlayer player) {
         String key = GhastAutopilotUtil.isAutoPilot() ? "enabled" : "disabled";
-        displayClientMessage(player, key + "." + Constants.MOD_ID + ".toggle_autopilot");
+        displayClientMessage(player, key + "." + MODID_TOGGLE_AUTOPILOT, ChatFormatting.GREEN);
     }
 
-    private static void displayClientMessage(LocalPlayer player, String message) {
+    private static void displayClientMessage(LocalPlayer player, String message, ChatFormatting chatFormatting) {
         if (Boolean.FALSE.equals(CONFIG.getDisplayToggleNotification().getValue())) return;
-        player.displayClientMessage(Component.translatable(message), true);
+        player.displayClientMessage(Component.translatable(message).withStyle(chatFormatting), true);
     }
 }
