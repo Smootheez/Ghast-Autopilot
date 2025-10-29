@@ -33,5 +33,6 @@
   "config.widget.ghastautopilot.icon_position.left_middle": "Tengah Kiri",
 
   "key.ghastautopilot.toggle_autopilot": "Toggle Autopilot",
-  "key.category.ghastautopilot.ghast_autopilot": "Ghast Autopilot"
+  "key.category.ghastautopilot.ghast_autopilot": "Ghast Autopilot",
+  "config.screen.ghastautopilot.title": "Ghast Autopilot Config"
 }

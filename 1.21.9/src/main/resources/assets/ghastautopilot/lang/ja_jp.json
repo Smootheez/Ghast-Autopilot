@@ -13,6 +13,8 @@
   "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] オートパイロットが無効になりました",
   "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] ハッピーなガストに乗っている必要があります",
 
+  "config.screen.ghastautopilot.title": "ガストオートパイロット設定",
+
   "config.widget.ghastautopilot.debug_mode": "デバッグモード",
   "config.widget.ghastautopilot.ghast_autopilot": "ガストオートパイロット",
   "config.widget.ghastautopilot.display_toggle_notification": "切り替え通知を表示",

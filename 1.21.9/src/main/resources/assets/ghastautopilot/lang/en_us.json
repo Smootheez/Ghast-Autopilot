@@ -13,6 +13,8 @@
   "disabled.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] Autopilot disabled",
   "fail.ghastautopilot.toggle_autopilot": "[Ghast Autopilot] You must be riding a Happy Ghast",
 
+  "config.screen.ghastautopilot.title": "Ghast Autopilot Config",
+
   "config.widget.ghastautopilot.debug_mode": "Debug Mode",
   "config.widget.ghastautopilot.ghast_autopilot": "Ghast Autopilot",
   "config.widget.ghastautopilot.display_toggle_notification": "Display Toggle Notification",
